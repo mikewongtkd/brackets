@@ -9,8 +9,14 @@
 		<link href="include/brackets/css/brackets.css" rel="stylesheet" />
 		<script src="include/svg/svg.min.js"></script>
 		<script src="include/jquery/js/jquery.min.js"></script>
+		<script src="include/jquery/js/jquery-ui.min.js"></script>
 		<script src="include/bootstrap/js/bootstrap.min.js"></script>
 		<script src="include/bootstrap/add-ons/editable/js/bootstrap-editable.min.js"></script>
+		<script src="include/brackets/js/freescore.js"></script>
+		<script src="include/brackets/js/score.class.js"></script>
+		<script src="include/brackets/js/athlete.class.js"></script>
+		<script src="include/brackets/js/division.class.js"></script>
+		<script src="include/brackets/js/brackets.js"></script>
 		<script src="include/codemirror/lib/codemirror.js"></script>
 	</head>
 	<body>
@@ -26,8 +32,10 @@
 			
 		</div>
 		<script>
-			var division = {};
+			var data     = {};
+			var division = new Division( data );
 			var athletes = { textarea: document.getElementById( 'athletes' ) };
+
 			$( function() {
 				$( '#division-description' ).editable({ 
 					type:    'text', 
@@ -38,6 +46,15 @@
 				}});
 				athletes.editor = CodeMirror.fromTextArea( athletes.textarea, { lineNumbers: true });
 				athletes.editor.setSize( '100%', '480' );
+				athletes.editor.on( 'change', function( cm, change ) { 
+					var list  = { text : cm.getValue() };
+					var names = list.text.split( /\n/ );
+					data.athletes = [];
+					names.forEach( function( name, i ) { data.athletes.push({ name: name }); });
+
+					$( '#brackets' ).empty();
+					$( '#brackets' ).brackets( division );
+				});
 			});
 		</script>
 	</body>
