@@ -1,0 +1,7 @@
+@page {
+  size: A4 landscape; }
+@media print {
+  .editable-click {
+    border-bottom: none !important; } }
+
+/*# sourceMappingURL=brackets.css.map */

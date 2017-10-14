@@ -1,23 +1,35 @@
 <html>
 	<head>
+		<link href="include/fontawesome/css/font-awesome.min.css" rel="stylesheet" />
 		<link href="include/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="include/bootstrap/add-ons/editable/css/bootstrap-editable.css" rel="stylesheet" />
 		<link href="include/alertify/css/alertify.min.css" rel="stylesheet" />
 		<link href="include/alertify/css/themes/default.min.css" rel="stylesheet" />
-		<link href="include/page-transitions/css/animations.css" rel="stylesheet" type="text/css" />
-		<script src="include/jquery/js/jquery.js"></script>
+		<link href="include/brackets/css/brackets.css" rel="stylesheet" />
+		<script src="include/jquery/js/jquery.min.js"></script>
 		<script src="include/bootstrap/js/bootstrap.min.js"></script>
+		<script src="include/bootstrap/add-ons/editable/js/bootstrap-editable.min.js"></script>
 	</head>
 	<body>
-		<div id="pt-main" class="pt-perspective">
-			<div class="pt-page pt-page-1">
-				<div class="container">
-				</div>
-			</div>
-			<div class="pt-page pt-page-2">
-				<div class="container">
-				</div>
+		<div class="page-header">
+			<div class="container">
+				<h1 id="division-description">Division</h1>
 			</div>
 		</div>
-		<script src="include/page-transitions/js/pagetransitions.js"></script>
+		<div class="container">
+			
+		</div>
+		<script>
+			var division = {};
+			$( function() {
+					$( '#division-description' ).editable({ 
+						type:    'text', 
+						title:   'Enter division description', 
+						success: function( response, newValue ) {
+						
+						division.description = newValue;
+					}});
+			});
+		</script>
 	</body>
 </html>
