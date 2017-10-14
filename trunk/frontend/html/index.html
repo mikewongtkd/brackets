@@ -3,17 +3,23 @@
 		<link href="include/fontawesome/css/font-awesome.min.css" rel="stylesheet" />
 		<link href="include/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="include/bootstrap/add-ons/editable/css/bootstrap-editable.css" rel="stylesheet" />
+		<link href="include/codemirror/lib/codemirror.css" rel="stylesheet" />
 		<link href="include/alertify/css/alertify.min.css" rel="stylesheet" />
 		<link href="include/alertify/css/themes/default.min.css" rel="stylesheet" />
 		<link href="include/brackets/css/brackets.css" rel="stylesheet" />
+		<script src="include/svg/svg.min.js"></script>
 		<script src="include/jquery/js/jquery.min.js"></script>
 		<script src="include/bootstrap/js/bootstrap.min.js"></script>
 		<script src="include/bootstrap/add-ons/editable/js/bootstrap-editable.min.js"></script>
+		<script src="include/codemirror/lib/codemirror.js"></script>
 	</head>
 	<body>
 		<div class="page-header">
 			<div class="container">
 				<h1 id="division-description">Division</h1>
+				<div class="brackets" id="brackets"></div> 
+				<h4>Athletes</h4>
+				<textarea id="athletes" class="panel-body"></textarea>
 			</div>
 		</div>
 		<div class="container">
@@ -21,14 +27,17 @@
 		</div>
 		<script>
 			var division = {};
+			var athletes = { textarea: document.getElementById( 'athletes' ) };
 			$( function() {
-					$( '#division-description' ).editable({ 
-						type:    'text', 
-						title:   'Enter division description', 
-						success: function( response, newValue ) {
-						
-						division.description = newValue;
-					}});
+				$( '#division-description' ).editable({ 
+					type:    'text', 
+					title:   'Enter division description', 
+					success: function( response, newValue ) {
+					
+					division.description = newValue;
+				}});
+				athletes.editor = CodeMirror.fromTextArea( athletes.textarea, { lineNumbers: true });
+				athletes.editor.setSize( '100%', '480' );
 			});
 		</script>
 	</body>
