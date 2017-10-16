@@ -31,7 +31,7 @@ function Division( division ) {
 			brackets = division.brackets[ j ];
 		}
 		return { list : brackets, current : brackets[ i ], round : j, blueAthlete : (2 * i), redAthlete : (2 * i) + 1 };
-	}
+	};
 
 	var _current = this.current = {
 		athlete : function() {

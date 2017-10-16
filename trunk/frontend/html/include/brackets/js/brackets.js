@@ -48,26 +48,22 @@ $.widget( "freescore.brackets", {
 				var clicked  = (function( id, x, y ) { var ijk = id.split( '-' ).map( function( x ) { return parseInt( x ); }); var clickEvent = { type: 'matchClicked', i: ijk[ 0 ], j: ijk[ 1 ], k: ijk[ 2 ]}; return function() { $( w ).trigger( clickEvent ); selected.move( x, y ); selected.show() }})( id, x, y );
 				
 				// ===== CALCULATE SCORES
-				blue.votes   = bracket.blue.votes.reduce( sum );
-				red.votes    = bracket.red.votes.reduce( sum );
+				blue.score   = bracket.blue.score;
+				red.score    = bracket.red.score;
 
-				var complete = blue.votes + red.votes == division.judges();
+				blue.won     = defined( bracket.blue.athlete )   && (blue.score > red.score);
+				red.won      = defined( bracket.red.athlete )    && (red.score  > blue.score);
 
-				if( complete ) {
-					blue.won     = defined( bracket.blue.athlete )   && (blue.votes > red.votes  && complete);
-					red.won      = defined( bracket.red.athlete )    && (red.votes  > blue.votes && complete);
-
-					if( blue.won ) { line.start.y = y + 20; line.head.y = line.start.y; }
-					if( red.won  ) { line.start.y = y + 60; line.head.y = line.start.y; }
-				}
+				if( blue.won ) { line.start.y = y + 20; line.head.y = line.start.y; }
+				if( red.won  ) { line.start.y = y + 60; line.head.y = line.start.y; }
 
 				// ===== RENDER THE MATCH
 				match.path('M 0 0 L 0 -30 Q 0 -40 10 -40 L 170 -40 Q 180 -40 180 -30 L 180 0 Z' ).fill( color.blue ).attr({ id: id + '-blue' }).move( 0,  0 );
 				match.path('M 0 0 L 0  30 Q 0  40 10  40 L 170  40 Q 180  40 180  30 L 180 0 Z' ).fill( color.red  ).attr({ id: id + '-red'  }).move( 0, 40 );
 				match.text( blue.athlete.name() ).font({ size: 24 }).fill( color.white ).move(  12,  8 );
 				match.text( red.athlete.name()  ).font({ size: 24 }).fill( color.white ).move(  12, 44 );
-				if( defined( bracket.blue.athlete )) { match.text( String( blue.votes )).font({ size: 24 }).fill( color.white ).move( 160,  8 ); }
-				if( defined( bracket.red.athlete  )) { match.text( String( red.votes  )).font({ size: 24 }).fill( color.white ).move( 160, 44 ); }
+				if( defined( bracket.blue.athlete )) { match.text( String( blue.score )).font({ size: 24 }).fill( color.white ).move( 160,  8 ); }
+				if( defined( bracket.red.athlete  )) { match.text( String( red.score  )).font({ size: 24 }).fill( color.white ).move( 160, 44 ); }
 
 				match.move( x, y );
 				match.click( clicked ); // Apply click behavior
@@ -75,7 +71,7 @@ $.widget( "freescore.brackets", {
 				// ===== RENDER THE LINES
 				var final_round = j == brackets.length - 1;
 				var semi_finals = j == brackets.length - 2;
-				if( complete && ! final_round ) {
+				if( ! final_round ) {
 					var next_block = scale.height/(4/Math.pow( 2, j + 1 ));
 					if( !( i % 2 )) { line.foot.y = (i + 1.0) * block      - 10; line.stop.y = line.foot.y; }
 					else            { line.foot.y =  i        * block      - 10; line.stop.y = line.foot.y; }

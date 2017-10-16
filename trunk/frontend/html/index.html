@@ -32,9 +32,46 @@
 			
 		</div>
 		<script>
-			var data     = {};
-			var division = new Division( data );
+			var division = { athletes: [], brackets: {} };
 			var athletes = { textarea: document.getElementById( 'athletes' ) };
+
+			var _build_brackets = function( brackets, athletes, byes ) {
+				byes       = defined( byes ) ? byes : 0;
+				var num    = { athletes: athletes.length, byes: { a: 0, b: 0 }};
+				var total  = num.athletes + byes;
+				var depth  = Math.ceil( Math.log( total )/Math.log( 2 ));
+				var size   = { round: Math.pow( 2, depth ) };
+
+				size.group = size.round / 2;
+				num.a      = Math.ceil( num.athletes / 2 );
+				num.b      = num.athletes - num.a;
+				num.byes.a = size.group - num.a;
+				num.byes.b = size.group - num.b;
+
+				console.log( brackets, athletes, num, size );
+
+				a = athletes.splice( 0, num.a );
+				b = athletes;
+
+				if( size.group <= 1 ) {
+					var blue = a[ 0 ];
+					var bye  = b.length > 0 ? undefined : 1;
+					var red  = b.length > 0 ? b[ 0 ] : undefined;
+					var bracket = bye ? 
+					{
+						blue: { athlete: blue,       score: 0 },
+						red:  { athlete: undefined,  score: 0 },
+					} : {
+						blue: { athlete: blue,       score: 0 },
+						red:  { athlete: red,        score: 0 },
+					}
+					brackets[ 0 ].push( bracket );
+					return;
+				}
+
+				_build_brackets( brackets, a, num.byes.a );
+				_build_brackets( brackets, b, num.byes.b );
+			};
 
 			$( function() {
 				$( '#division-description' ).editable({ 
@@ -46,14 +83,19 @@
 				}});
 				athletes.editor = CodeMirror.fromTextArea( athletes.textarea, { lineNumbers: true });
 				athletes.editor.setSize( '100%', '480' );
-				athletes.editor.on( 'change', function( cm, change ) { 
-					var list  = { text : cm.getValue() };
-					var names = list.text.split( /\n/ );
-					data.athletes = [];
-					names.forEach( function( name, i ) { data.athletes.push({ name: name }); });
+				athletes.editor.on( 'keydown', function( cm, ev ) { 
+					if( ev.key == 'Enter' ) {
+						var list  = { text : cm.getValue() };
+						var names = list.text.split( /\n/ );
+						names.forEach( function( name, i ) { division.athletes.push({ name: name }); });
 
-					$( '#brackets' ).empty();
-					$( '#brackets' ).brackets( division );
+						division.brackets = [[]];
+						athletes.indexes = division.athletes.map( function( athlete, i ) { return i; });
+						_build_brackets( division.brackets, athletes.indexes );
+
+						$( '#brackets' ).empty();
+						$( '#brackets' ).brackets({ division: division });
+					}
 				});
 			});
 		</script>
