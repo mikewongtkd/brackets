@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AACA,YAAa;EACZ,eAAgB;IAAE,aAAa,EAAE,eAAe",
+"mappings": "AAAA,KAA4B;EAApB,IAAI,EAAE,YAAa;AAC3B,YAAa;EACZ,eAAgB;IAAE,aAAa,EAAE,eAAe;;EAChD,aAAc;IAAE,OAAO,EAAE,IAAI;;EAC7B,MAAO;IAAE,OAAO,EAAE,IAAI;AAEvB,GAAI;EACH,UAAU,EAAE,CAAC;;AAEd,aAAc;EACb,KAAK,EAAE,IAAI",
 "sources": ["brackets.scss"],
 "names": [],
 "file": "brackets.css"

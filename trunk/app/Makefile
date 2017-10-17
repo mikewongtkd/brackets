@@ -1,11 +1,17 @@
 .PHONY: all icons
 APP=FreeBracketsTKD
+OS=darwin-x64
 
-all: icons
+all: icons app
+
+app:
 	nativefier http://localhost/brackets \
-		--icons icons/$(APP).icns \
+		--icon icons/$(APP).icns \
 		--show-menu-bar \
+		--maximize \
 		--name $(APP)
+	./bin/change-url $(APP) $(OS)
+	cp -Rf ../frontend/html/include ../frontend/html/index.html $(APP)-$(OS)/$(APP).app/Contents/Resources/app
 
 icons:
 	mkdir -p icons/$(APP).iconset
@@ -18,7 +24,11 @@ icons:
 	done; \
 	iconutil -c icns icons/$(APP).iconset
 
-clean:
+clean: clean-icons clean-app
+
+clean-icons:
 	rm -Rf icons/$(APP).iconset
 	rm -Rf icons/$(APP).icns
+
+clean-app:
 	rm -Rf $(APP)-darwin-x64

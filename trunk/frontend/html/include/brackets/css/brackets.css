@@ -1,5 +1,18 @@
+@page {
+  size: A4 landscape; }
 @media print {
   .editable-click {
-    border-bottom: none !important; } }
+    border-bottom: none !important; }
+
+  .instructions {
+    display: none; }
+
+  #print {
+    display: none; } }
+.h1 {
+  margin-top: 0; }
+
+.instructions {
+  color: #ccc; }
 
 /*# sourceMappingURL=brackets.css.map */

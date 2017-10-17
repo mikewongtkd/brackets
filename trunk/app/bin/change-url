@@ -1,0 +1,18 @@
+#! /usr/bin/perl
+
+use JSON::XS;
+use File::Slurp qw( read_file );
+
+my $app      = shift;
+my $os       = shift;
+my $json     = new JSON::XS();
+my $file     = "$app-$os/$app.app/Contents/Resources/app/nativefier.json";
+
+my $contents = read_file( $file );
+my $config   = $json->decode( $contents );
+
+$config->{ targetUrl } = "file:///Applications/$app.app/Contents/Resources/app/index.html";
+
+open FILE, ">$file" or die "Can't update '$file' $!";
+print FILE $json->canonical->encode( $config );
+close FILE;
