@@ -22,12 +22,12 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<h1><span id="division-description">Division <span class="instructions">(Click to Edit)</span></span></h1>
-				<div class="col-xs-8">
+				<div class="col-xs-6">
 					<div class="brackets" id="brackets"></div> 
 				</div>
-				<div class="col-xs-4">
-					<h4>Athletes <span class="instructions">(Type Names Below)</span></h4>
+				<div class="col-xs-6">
+					<h2><span id="tournament-name"></span></h2>
+					<h4><span id="division-description"></span></h4>
 					<textarea id="athletes" class="panel-body"></textarea>
 					<button id="print" class="btn btn-block btn-success">Print</button>
 				</div>
@@ -122,10 +122,20 @@
 			};
 
 			$( function() {
-				$.fn.editable.defaults.mode = 'inline';
+				$( '#tournament-name' ).editable({ 
+					type:      'text', 
+					title:     'Enter tournament name', 
+					emptytext: 'Tournament',
+					mode:      'inline',
+					success:   function( response, newValue ) {
+					
+					division.tournament = newValue;
+				}});
 				$( '#division-description' ).editable({ 
-					type:    'text', 
-					title:   'Enter division description', 
+					type:      'text', 
+					title:     'Enter division description', 
+					emptytext: 'Division',
+					mode:      'inline',
 					success: function( response, newValue ) {
 					
 					division.description = newValue;

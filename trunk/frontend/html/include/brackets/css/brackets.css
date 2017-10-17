@@ -15,4 +15,11 @@
 .instructions {
   color: #ccc; }
 
+.editable-empty {
+  color: #999;
+  font-style: normal; }
+  .editable-empty:hover {
+    color: #999;
+    font-style: normal; }
+
 /*# sourceMappingURL=brackets.css.map */

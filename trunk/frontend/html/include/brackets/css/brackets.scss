@@ -10,3 +10,11 @@
 .instructions {
 	color: #ccc;
 }
+.editable-empty {
+	color: #999;
+	font-style: normal;
+	&:hover {
+		color: #999;
+		font-style: normal;
+	}
+};
