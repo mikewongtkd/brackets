@@ -22,10 +22,10 @@
 	<body>
 		<div class="page-header">
 			<div class="container">
-				<h1 id="division-description">Division</h1>
 				<div class="brackets" id="brackets"></div> 
-				<h4>Athletes</h4>
+				<h4 id="division-description">Division</h4>
 				<textarea id="athletes" class="panel-body"></textarea>
+				<button id="print" class="btn btn-block btn-success">Print</button>
 			</div>
 		</div>
 		<div class="container">
@@ -143,6 +143,9 @@
 					$( '#brackets' ).empty();
 					$( '#brackets' ).brackets({ division: division });
 				});
+			});
+			$( '#print' ).off( 'click' ).click( function() {
+				window.print();
 			});
 		</script>
 	</body>
