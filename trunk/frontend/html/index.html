@@ -127,7 +127,7 @@
 					
 					division.description = newValue;
 				}});
-				athletes.editor = CodeMirror.fromTextArea( athletes.textarea, { lineNumbers: true });
+				athletes.editor = CodeMirror.fromTextArea( athletes.textarea, { lineNumbers: true, tabSize: 40 });
 				athletes.editor.setSize( '100%', '480' );
 				athletes.editor.on( 'change', function( cm, ev ) { 
 					var list  = { text : cm.getValue() };
