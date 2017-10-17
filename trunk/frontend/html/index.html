@@ -32,26 +32,26 @@
 			
 		</div>
 		<script>
-			var division = { athletes: [], brackets: {} };
+			var division = { athletes: [], brackets: {}, current: 0 };
 			var athletes = { textarea: document.getElementById( 'athletes' ) };
 
+			// ============================================================
 			var _build_brackets = function( brackets, athletes, byes ) {
+			// ============================================================
 				byes       = defined( byes ) ? byes : 0;
 				var num    = { athletes: athletes.length, byes: { a: 0, b: 0 }};
 				var total  = num.athletes + byes;
 				var depth  = Math.ceil( Math.log( total )/Math.log( 2 ));
 				var size   = { round: Math.pow( 2, depth ) };
 
-				size.group = size.round / 2;
+				size.group = Math.ceil( size.round / 2 );
 				num.a      = Math.ceil( num.athletes / 2 );
 				num.b      = num.athletes - num.a;
 				num.byes.a = size.group - num.a;
 				num.byes.b = size.group - num.b;
 
-				console.log( brackets, athletes, num, size );
-
-				a = athletes.splice( 0, num.a );
-				b = athletes;
+				var a = athletes.splice( 0, num.a );
+				var b = athletes;
 
 				if( size.group <= 1 ) {
 					var blue = a[ 0 ];
@@ -73,6 +73,52 @@
 				_build_brackets( brackets, b, num.byes.b );
 			};
 
+			// ============================================================
+			var _update_brackets = function( division ) {
+			// ============================================================
+				var rounds = division.brackets.length;
+				var n      = division.athletes.length;
+				var depth  = Math.ceil( Math.log( n ) / Math.log( 2 ));
+
+				for( var r = 0; r < depth; r++ ) {
+					if( ! defined( division.brackets[ r ] )) { division.brackets.push( [] ); }
+					var round   = division.brackets[ r ];
+					var next    = r + 1;
+					var matches = Math.pow( 2, (depth - (r + 1)));
+					
+					for( var i = 0; round.length < matches; i++ ) {
+						round.push( { blue: { athlete: undefined, score: 0 }, red: { athlete: undefined, score: 0 }} );
+					}
+
+					if( round.length == 1 ) { break; }
+
+					var update   = rounds >= next;
+					var newRound = [];
+					if( update ) { division.brackets.push( newRound ); }
+					var nextRound = defined( division.brackets[ next ] ) ? division.brackets[ next ] : [];
+
+					for( var i = 0; i < round.length; i += 2 ) {
+						var j = i + 1;
+						var a = round[ i ];
+						var b = round[ j ];
+
+						var advances = [];
+						[ a, b ].forEach( function( bracket ) {
+							var blue = bracket.blue;
+							var red  = bracket.red;
+							if( blue.score > red.score  ) { advances.push( blue.athlete ); } else
+							if( red.score  > blue.score ) { advances.push( red.athlete  ); }
+						});
+
+						var blue    = { athlete: advances.shift(), score: 0 };
+						var red     = { athlete: advances.shift(), score: 0 };
+						var bracket = { blue: blue, red: red };
+
+						nextRound.push( bracket );
+					}
+				}
+			};
+
 			$( function() {
 				$( '#division-description' ).editable({ 
 					type:    'text', 
@@ -83,19 +129,19 @@
 				}});
 				athletes.editor = CodeMirror.fromTextArea( athletes.textarea, { lineNumbers: true });
 				athletes.editor.setSize( '100%', '480' );
-				athletes.editor.on( 'keydown', function( cm, ev ) { 
-					if( ev.key == 'Enter' ) {
-						var list  = { text : cm.getValue() };
-						var names = list.text.split( /\n/ );
-						names.forEach( function( name, i ) { division.athletes.push({ name: name }); });
+				athletes.editor.on( 'change', function( cm, ev ) { 
+					var list  = { text : cm.getValue() };
+					var names = list.text.split( /\n/ ).filter( function( name ) { return name.length > 0; } ) ;
+					division.athletes = [];
+					names.forEach( function( name, i ) { division.athletes.push({ name: name }); });
 
-						division.brackets = [[]];
-						athletes.indexes = division.athletes.map( function( athlete, i ) { return i; });
-						_build_brackets( division.brackets, athletes.indexes );
+					division.brackets = [[]];
+					athletes.indexes = division.athletes.map( function( athlete, i ) { return i; });
+					_build_brackets( division.brackets, athletes.indexes );
+					_update_brackets( division );
 
-						$( '#brackets' ).empty();
-						$( '#brackets' ).brackets({ division: division });
-					}
+					$( '#brackets' ).empty();
+					$( '#brackets' ).brackets({ division: division });
 				});
 			});
 		</script>
